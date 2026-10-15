@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Study Buddy - Fire TV Edition</title>
+    <!-- Hum ismein premium look ke liye Google Fonts jod rahe hain -->
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<style> /* Universal Styles - Font aur Body Setup */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #0f0c20 0%, #15102a 100%);
+    color: #ffffff;
+    min-height: 100vh;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* TV Screen Wrapper (For 1080p Smart TV layout) */
+.tv-container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+/* Top Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 15px;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(45deg, #ff9900, #ff5500); /* AWS Orange Gradient */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1px;
+}
+
+.badge {
+    background: rgba(255, 153, 0, 0.1);
+    border: 1px solid #ff9900;
+    color: #ff9900;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 0 15px rgba(255, 153, 0, 0.2);
+}
+
+/* Dashboard Grid Layout (Two Column) */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 30px;
+}
+
+/* Common Card Styling (Premium Neon Glassmorphism) */
+.card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    border-color: #ff9900;
+    box-shadow: 0 0 25px rgba(255, 153, 0, 0.15);
+    transform: translateY(-5px);
+}
+
+h2 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 20px;
+}
+
+/* Left Side: AI Voice Player Form */
+textarea {
+    width: 100%;
+    height: 220px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: white;
+    padding: 15px;
+    font-size: 1rem;
+    resize: none;
+    margin-bottom: 20px;
+    outline: none;
+}
+
+textarea:focus {
+    border-color: #ff9900;
+    box-shadow: 0 0 10px rgba(255, 153, 0, 0.3);
+}
+
+/* Right Side Column Flex */
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Pomodoro Timer Display */
+.timer-section {
+    text-align: center;
+}
+
+.timer-display {
+    font-size: 4.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 15px 0;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    letter-spacing: 2px;
+}
+
+/* Motivation Quotes Styling */
+.motivation-section #quote-text {
+    font-style: italic;
+    font-size: 1.1rem;
+    color: #e0e0e0;
+    line-height: 1.6;
+    margin-top: 15px;
+}
+
+.motivation-section .author {
+    display: block;
+    text-align: right;
+    color: #ff9900;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+/* Interactive Buttons */
+.button-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+.btn-primary { background: linear-gradient(45deg, #ff9900, #ff5500); color: white; width: 100%; }
+.btn-secondary { background: #333; color: white; }
+.btn-success { background: #00b4d8; color: white; width: 50%; }
+.btn-danger { background: #ef233c; color: white; width: 50%; }
+
+.btn-primary:hover { box-shadow: 0 0 15px rgba(255, 153, 0, 0.4); }
+ </style>
+<body>
+    <div class="tv-container">
+        <!-- Header Section -->
+        <header>
+            <div class="logo">🔥 AWS Study Buddy</div>
+            <div id="live-clock" class="badge">00:00:00 PM</div>
+        </header>
+
+        <!-- Main Dashboard Layout -->
+        <main class="dashboard-grid">
+            
+            <!-- Left Side: AWS AI Voice Player -->
+            <section class="card ai-voice-section">
+                <h2>🎙️ AWS Polly AI Audio Notes</h2>
+                <p class="subtitle">Enter your textbook notes below. Fire TV will read them out aloud using AWS Cloud AI Voice!</p>
+                <textarea id="notes-text" placeholder="Type or paste your BSc Computer Science notes here..."></textarea>
+                <div class="button-group">
+                    <button id="btn-speak" class="btn-primary">🔊 Speak via AWS</button>
+                    <button id="btn-clear" class="btn-secondary">🧹 Clear</button>
+                </div>
+            </section>
+
+            <!-- Right Side: Focus Timer & Stats -->
+            <div class="right-column">
+                <!-- Pomodoro Timer Widget -->
+                <section class="card timer-section">
+                    <h2>⏱️ Focus Pomodoro</h2>
+                    <div class="timer-display" id="timer">25:00</div>
+                    <div class="button-group">
+                        <button id="btn-start" class="btn-success">Start</button>
+                        <button id="btn-reset" class="btn-danger">Reset</button>
+                    </div>
+                </section>
+
+                <!-- Daily Motivation Widget -->
+                <section class="card motivation-section">
+                    <h2>💡 Tech Motivation of the Day</h2>
+                    <p id="quote-text">"The best way to predict the future is to invent it."</p>
+                    <span class="author">- Alan Kay</span>
+                </section>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+<script>
+    // --- LIVE CLOCK SYSTEM ---
+function updateClock() {
+    const now = new Date();
+    document.getElementById('live-clock').textContent = now.toLocaleTimeString();
+}
+setInterval(updateClock, 1000); 
+updateClock();
+
+// --- POMODORO TIMER SYSTEM ---
+let timeLeft = 25 * 60; // 25 Minutes
+let isRunning = false; 
+let timerInterval;
+const timerDisplay = document.getElementById('timer');
+const startBtn = document.getElementById('btn-start');
+
+startBtn.addEventListener('click', () => {
+    if (!isRunning) {
+        isRunning = true; 
+        startBtn.textContent = "Pause";
+        timerInterval = setInterval(() => {
+            if (timeLeft > 0) { 
+                timeLeft--; 
+                const mins = String(Math.floor(timeLeft / 60)).padStart(2, '0'); 
+                const secs = String(timeLeft % 60).padStart(2, '0'); 
+                timerDisplay.textContent = `${mins}:${secs}`; 
+            }
+        }, 1000);
+    } else { 
+        clearInterval(timerInterval); 
+        isRunning = false; 
+        startBtn.textContent = "Start"; 
+    }
+});
+
+document.getElementById('btn-reset').addEventListener('click', () => {
+    clearInterval(timerInterval); 
+    isRunning = false; 
+    timeLeft = 25 * 60; 
+    startBtn.textContent = "Start"; 
+    timerDisplay.textContent = "25:00";
+});
+
+// --- AI VOICE SYNTHESIS ENGINE ---
+document.getElementById('btn-speak').addEventListener('click', () => {
+    const text = document.getElementById('notes-text').value;
+    if(!text) return alert("Please type your notes first! 📝");
+    
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.rate = 0.9; // Clear reading speed
+    window.speechSynthesis.speak(speech);
+});
+
+document.getElementById('btn-clear').addEventListener('click', () => { 
+    document.getElementById('notes-text').value = ""; 
+    window.speechSynthesis.cancel(); 
+});
+</script>
